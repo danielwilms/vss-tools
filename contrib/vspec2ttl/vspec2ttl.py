@@ -29,12 +29,7 @@ from model.vsstree import VSSNode, VSSType
 from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, XSD, OWL, XMLNS, RDF, FOAF, SKOS, SDO, NamespaceManager
 from enum import Enum
-
 from vssotypes import VssoConcepts, DataTypes, DataUnits, Namespaces
-
-
-
-
 
 def usage():
     print(f"""
@@ -91,14 +86,12 @@ def setup_graph():
     g.add((hasComponentInstance,RDFS.subPropertyOf, OWL.topDatatypeProperty))
     g.add((hasComponentInstance,RDFS.label, Literal(VssoConcepts.HAS_COMP_INST.value,lang="en")))
 
-
     hasAttribute = VssoConcepts.HAS_ATTRIBUTE.uri
     g.add((hasAttribute, RDF.type, OWL.ObjectProperty))
     g.add((hasAttribute,RDFS.subPropertyOf, OWL.topObjectProperty))
     g.add((hasAttribute, RDFS.domain, VssoConcepts.VEHICLE.uri))
     g.add((hasAttribute, RDFS.range, VssoConcepts.VEHICLE_STAT.uri))
     g.add((hasAttribute, RDFS.label, Literal(VssoConcepts.HAS_ATTRIBUTE.value,lang="en")))
-
 
     ##
     # Classes
@@ -107,7 +100,6 @@ def setup_graph():
     g.add((vehicle, RDF.type, OWL.Class))
     g.add((vehicle, RDF.type, RDFS.Class))
     g.add((vehicle,RDFS.label, Literal(VssoConcepts.VEHICLE.value,lang="en")))
-
 
     staticVehicleProperty = VssoConcepts.VEHICLE_STAT.uri
     g.add((staticVehicleProperty, RDF.type, OWL.Class))
@@ -119,12 +111,10 @@ def setup_graph():
     g.add((vehicleComp, RDF.type, RDFS.Class))
     g.add((vehicleComp,RDFS.label, Literal(VssoConcepts.VEHICLE_COMP.value,lang="en")))
 
-
     vehicleProp = VssoConcepts.VEHICLE_PROP.uri
     g.add((vehicleProp, RDF.type, OWL.Class))
     g.add((vehicleProp, RDF.type, RDFS.Class))
     g.add((vehicleProp,RDFS.label, Literal(VssoConcepts.VEHICLE_PROP.value,lang="en")))
-
 
     vehicleSignal = VssoConcepts.VEHICLE_SIGNAL.uri
     g.add((vehicleSignal, RDF.type, OWL.Class))
@@ -132,14 +122,11 @@ def setup_graph():
     g.add((vehicleSignal, RDFS.subClassOf, VssoConcepts.VEHICLE_PROP.uri))
     g.add((vehicleSignal,RDFS.label, Literal(VssoConcepts.VEHICLE_SIGNAL.value,lang="en")))
 
-
     vehicleAct = VssoConcepts.VEHICLE_ACT.uri
     g.add((vehicleAct, RDF.type, OWL.Class))
     g.add((vehicleAct, RDF.type, RDFS.Class))
     g.add((vehicleAct, RDFS.subClassOf, VssoConcepts.VEHICLE_PROP.uri))
     g.add((vehicleAct,RDFS.label, Literal(VssoConcepts.VEHICLE_ACT.value,lang="en")))
-
-
 
     # Bind the FOAF namespace to a prefix for more readable output
     g.bind("vsso", VssoConcepts.EMPTY.uri)
@@ -152,7 +139,6 @@ def setup_graph():
     g.bind("qudt", URIRef(Namespaces["qudt"]))
     g.bind("cdt", URIRef(Namespaces["cdt"]))
     
-
     # print all the data in the Notation3 format
     print("--- printing mboxes ---")
     print(g.serialize(format='ttl').decode("utf-8"))
@@ -202,9 +188,8 @@ def print_ttl_content(file, tree):
         else:
             name_list.append (tree_node.name)
 
-        extension = ''
-        
-        
+        extension = ''      
+      
         if name in vsso_name_list:
             print (f"** VSSO warning: {name}" )
             name = setTTLName(tree_node.parent) + tree_node.name
@@ -218,32 +203,20 @@ def print_ttl_content(file, tree):
             vsso_name_list.append (name)
 
         name_space = VssoConcepts.EMPTY.uri_string
-        
-        
-        
         node = URIRef(name_space + name)
 
-        # not needed, in case we use classes
-        # if VSSType.ATTRIBUTE == tree_node.type:
-        #     node = URIRef(f"{VssoConcepts.EMPTY.uri_string}has{name}")
-        
         graph.add((node, RDFS.label, Literal(name,"en")))
         graph.add((node, SKOS.altLabel, Literal(tree_node.qualified_name('.'),"en")))
         graph.add((node, RDFS.comment, Literal(tree_node.description,"en")))
         
         parent_name_space = VssoConcepts.EMPTY.uri_string
         
-
-
         # branch nodes (incl. instance handling)
         if VSSType.BRANCH == tree_node.type:
             if tree_node.parent:
                 graph.add((node, RDF.type, OWL.Class))
                 graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_COMP.uri))
                 graph.add((node, VssoConcepts.PART_OF.uri, URIRef(parent_name_space + setTTLName(tree_node.parent))))
-            # if tree_node.instances:
-            #     print (instances)
-        # leafs (incl. restrictions)
         else: 
             graph.add((node, VssoConcepts.BELONGS_TO.uri, URIRef(parent_name_space + setTTLName(tree_node.parent))))
 
@@ -251,9 +224,7 @@ def print_ttl_content(file, tree):
                 #graph.add((node, RDF.type, OWL.DatatypeProperty))
                 graph.add((node, RDF.type, OWL.Class))
                 graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_STAT.uri))
-                
             else:
-
                 if (tree_node.data_type in datatypes.keys()):
                     datatypes[tree_node.data_type] += 1
                 else:
@@ -261,7 +232,6 @@ def print_ttl_content(file, tree):
 
                 graph.add((node, RDF.type, OWL.Class))
                 graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_SIGNAL.uri))
-
                 if VSSType.ACTUATOR == tree_node.type:
                     graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_ACT.uri))
 
