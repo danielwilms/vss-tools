@@ -69,8 +69,10 @@ def setup_graph():
     g = Graph()
     
     belongsTo = VssoConcepts.BELONGS_TO.uri
-    g.add((belongsTo, RDF.type, OWL.AnnotationProperty))
+    g.add((belongsTo, RDF.type, OWL.ObjectProperty))
+    g.add((belongsTo,RDFS.subPropertyOf, OWL.topDatatypeProperty))
     g.add((belongsTo,RDFS.label, Literal(VssoConcepts.BELONGS_TO.value,lang="en")))
+    g.add((belongsTo, RDFS.range, VssoConcepts.VEHICLE_COMP.uri))
 
     holdsValue = VssoConcepts.HOLDS_VALUE.uri
     g.add((holdsValue, RDF.type, OWL.DatatypeProperty))
@@ -236,7 +238,8 @@ def print_ttl_content(file, tree):
         # branch nodes (incl. instance handling)
         if VSSType.BRANCH == tree_node.type:
             if tree_node.parent:
-                graph.add((node, RDF.type, VssoConcepts.VEHICLE_COMP.uri))
+                graph.add((node, RDF.type, OWL.Class))
+                graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_COMP.uri))
                 graph.add((node, VssoConcepts.PART_OF.uri, URIRef(parent_name_space + setTTLName(tree_node.parent))))
             # if tree_node.instances:
             #     print (instances)
@@ -301,7 +304,7 @@ if __name__ == "__main__":
         usage()
 
     try:
-        tree = vspec.load_tree(args[0], include_dirs, False)
+        tree = vspec.load_tree(args[0], include_dirs, False, instantiation=False)
         ttl_out = open(args[1], "w")
         print_ttl_content(ttl_out, tree)
         ttl_out.write("\n")
