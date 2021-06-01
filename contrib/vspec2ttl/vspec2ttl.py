@@ -254,7 +254,6 @@ def print_ttl_content(file, tree):
             if VSSType.ATTRIBUTE == tree_node.type:
                 #graph.add((node, RDF.type, OWL.DatatypeProperty))
                 graph.add((node, RDF.type, OWL.Class))
-                graph.add((node, RDF.type, RDFS.Class))
                 graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_STAT.uri))
                 
             else:
@@ -265,7 +264,6 @@ def print_ttl_content(file, tree):
                     datatypes[tree_node.data_type] = 1
 
                 graph.add((node, RDF.type, OWL.Class))
-                graph.add((node, RDF.type, RDFS.Class))
                 graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_SIGNAL.uri))
 
                 if VSSType.ACTUATOR == tree_node.type:
