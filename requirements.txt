@@ -7,3 +7,4 @@ XlsxWriter>=1.2.8
 stringcase>=1.2.0
 deprecation>=2.1.0
 pytest>=2.7.2
+rdflib>=5.0.0
