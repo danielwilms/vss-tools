@@ -98,33 +98,27 @@ def setup_graph():
     ##
     vehicle = VssoConcepts.VEHICLE.uri
     g.add((vehicle, RDF.type, OWL.Class))
-    g.add((vehicle, RDF.type, RDFS.Class))
     g.add((vehicle,RDFS.label, Literal(VssoConcepts.VEHICLE.value,lang="en")))
 
     staticVehicleProperty = VssoConcepts.VEHICLE_STAT.uri
     g.add((staticVehicleProperty, RDF.type, OWL.Class))
-    g.add((staticVehicleProperty, RDF.type, RDFS.Class))
     g.add((staticVehicleProperty, RDFS.label, Literal(VssoConcepts.VEHICLE_STAT.value,lang="en")))
     
     vehicleComp = VssoConcepts.VEHICLE_COMP.uri
     g.add((vehicleComp, RDF.type, OWL.Class))
-    g.add((vehicleComp, RDF.type, RDFS.Class))
     g.add((vehicleComp,RDFS.label, Literal(VssoConcepts.VEHICLE_COMP.value,lang="en")))
 
     vehicleProp = VssoConcepts.VEHICLE_PROP.uri
     g.add((vehicleProp, RDF.type, OWL.Class))
-    g.add((vehicleProp, RDF.type, RDFS.Class))
     g.add((vehicleProp,RDFS.label, Literal(VssoConcepts.VEHICLE_PROP.value,lang="en")))
 
     vehicleSignal = VssoConcepts.VEHICLE_SIGNAL.uri
     g.add((vehicleSignal, RDF.type, OWL.Class))
-    g.add((vehicleSignal, RDF.type, RDFS.Class))
     g.add((vehicleSignal, RDFS.subClassOf, VssoConcepts.VEHICLE_PROP.uri))
     g.add((vehicleSignal,RDFS.label, Literal(VssoConcepts.VEHICLE_SIGNAL.value,lang="en")))
 
     vehicleAct = VssoConcepts.VEHICLE_ACT.uri
     g.add((vehicleAct, RDF.type, OWL.Class))
-    g.add((vehicleAct, RDF.type, RDFS.Class))
     g.add((vehicleAct, RDFS.subClassOf, VssoConcepts.VEHICLE_PROP.uri))
     g.add((vehicleAct,RDFS.label, Literal(VssoConcepts.VEHICLE_ACT.value,lang="en")))
 
@@ -216,9 +210,9 @@ def print_ttl_content(file, tree):
             if tree_node.parent:
                 graph.add((node, RDF.type, OWL.Class))
                 graph.add((node, RDFS.subClassOf, VssoConcepts.VEHICLE_COMP.uri))
-                graph.add((node, VssoConcepts.PART_OF.uri, URIRef(parent_name_space + setTTLName(tree_node.parent))))
+                
         else: 
-            graph.add((node, VssoConcepts.BELONGS_TO.uri, URIRef(parent_name_space + setTTLName(tree_node.parent))))
+            
 
             if VSSType.ATTRIBUTE == tree_node.type:
                 #graph.add((node, RDF.type, OWL.DatatypeProperty))
